@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Monitor">
+<title>Monitor Gestante</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
+.app{max-width:430px;margin:0 auto;padding:0 0 90px}
+/* header */
+.hdr{background:#fff;border-bottom:0.5px solid rgba(0,0,0,.12);padding:14px 20px;position:sticky;top:0;z-index:50}
+.hdr h1{font-size:17px;font-weight:600}
+.hdr p{font-size:12px;color:#6e6e73;margin-top:2px}
+/* section */
+.sec{background:#fff;margin:12px 16px;border-radius:16px;border:0.5px solid rgba(0,0,0,.1);overflow:hidden}
+.sec-ttl{font-size:11px;font-weight:600;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em;padding:14px 16px 8px}
+/* form */
+.fgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 16px 14px}
+.fld label{font-size:11px;color:#6e6e73;display:block;margin-bottom:4px}
+.fld input[type=number]{width:100%;height:48px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#f2f2f7;color:#1c1c1e;font-size:22px;font-weight:600;text-align:center;padding:0 4px;-webkit-appearance:none;appearance:none}
+.fld input:focus{outline:none;border-color:#1D9E75;background:#fff}
+.nrow{padding:0 16px 14px}
+.nrow input{width:100%;height:38px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#f2f2f7;color:#1c1c1e;font-size:13px;padding:0 12px}
+.nrow input::placeholder{color:#aeaeb2}
+.nrow input:focus{outline:none;border-color:#1D9E75;background:#fff}
+.bsave{display:block;width:calc(100% - 32px);margin:0 16px 16px;height:50px;border-radius:14px;border:none;background:#1D9E75;color:#fff;font-size:16px;font-weight:600;cursor:pointer;letter-spacing:.01em}
+.bsave:active{opacity:.82;transform:scale(.98)}
+/* tabs */
+.tabs-nav{display:flex;border-bottom:0.5px solid rgba(0,0,0,.1)}
+.tbt{flex:1;padding:11px 0;font-size:13px;font-weight:500;background:none;border:none;cursor:pointer;color:#6e6e73;border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.tbt.on{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:600}
+.tc{display:none}.tc.on{display:block}
+/* watch dark card */
+.ww{margin:12px 16px 16px;background:#1a1a1a;border-radius:18px;padding:16px 16px 12px}
+.wttl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.06em}
+.wbig{font-size:40px;font-weight:600;color:#fff;line-height:1.1}
+.wunit{font-size:11px;color:#666;margin-top:2px}
+.wtabs{display:flex;gap:5px;margin-top:8px}
+.wtab{font-size:12px;padding:4px 11px;border-radius:20px;border:none;cursor:pointer;font-weight:500;background:#2a2a2a;color:#888}
+.wtab.on{background:#333;color:#fff}
+.cwrap{position:relative;height:90px;margin:10px 0 4px}
+.xlbl{display:flex;justify-content:space-between;font-size:9px;color:#555;flex-wrap:wrap;gap:2px;margin-top:4px}
+.wstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid #333}
+.wst{text-align:center}
+.wstv{font-size:16px;font-weight:600;color:#ccc}
+.wstl{font-size:9px;color:#555;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+/* filters */
+.pills{display:flex;gap:7px;flex-wrap:wrap;padding:10px 16px 4px}
+.pill{font-size:12px;padding:5px 12px;border-radius:20px;border:0.5px solid rgba(0,0,0,.15);background:#f2f2f7;color:#1c1c1e;cursor:pointer;font-weight:500}
+.pill.on{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.drow{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px}
+.drow label{font-size:11px;color:#6e6e73;display:block;margin-bottom:3px}
+.drow input[type=date]{width:100%;height:36px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#f2f2f7;color:#1c1c1e;font-size:12px;padding:0 8px}
+.clrbtn{font-size:12px;color:#1D9E75;background:none;border:none;cursor:pointer;padding:0 16px 12px;display:block;font-weight:500}
+/* compare */
+.cmpgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 16px 8px}
+.ccard{border-radius:12px;padding:12px;border:0.5px solid}
+.ccard.a{background:rgba(29,158,117,.08);border-color:rgba(29,158,117,.3)}
+.ccard.b{background:rgba(55,138,221,.08);border-color:rgba(55,138,221,.3)}
+.clbl{font-size:11px;font-weight:600;margin-bottom:5px}
+.ccard.a .clbl{color:#1D9E75}.ccard.b .clbl{color:#378ADD}
+.cval{font-size:24px;font-weight:600}
+.csub{font-size:11px;color:#6e6e73;margin-top:2px}
+.drow2{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 10px}
+.drow2 label{font-size:11px;color:#6e6e73;display:block;margin-bottom:3px}
+.drow2 input[type=date]{width:100%;height:34px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#f2f2f7;color:#1c1c1e;font-size:11px;padding:0 8px}
+.deltarow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:8px 16px 16px}
+.dc{background:#f2f2f7;border-radius:10px;padding:10px;text-align:center}
+.dv{font-size:18px;font-weight:600}
+.dl{font-size:9px;color:#6e6e73;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.dpos{color:#E24B4A}.dneg{color:#1D9E75}.dzero{color:#6e6e73}
+/* history */
+.hlist{padding:0 16px 14px;display:flex;flex-direction:column;gap:7px}
+.hi{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 13px;background:#f2f2f7;border-radius:12px}
+.hdate{font-size:10px;color:#6e6e73;margin-bottom:2px}
+.hvals{font-size:14px;font-weight:600}
+.hnote{font-size:11px;color:#6e6e73;font-style:italic;margin-top:2px}
+.hrgt{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.delbtn{background:none;border:none;color:#aeaeb2;font-size:20px;cursor:pointer;line-height:1;padding:0}
+.editbtn{background:none;border:none;color:#aeaeb2;font-size:15px;cursor:pointer;line-height:1;padding:0}
+/* edit mode inline */
+.hi-edit{padding:12px 13px;background:#f2f2f7;border-radius:12px;margin-bottom:7px}
+.hi-edit .egrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.hi-edit .egrid input{width:100%;height:42px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#fff;color:#1c1c1e;font-size:18px;font-weight:600;text-align:center;padding:0 4px}
+.hi-edit .egrid input:focus{outline:none;border-color:#1D9E75}
+.hi-edit .enote{width:100%;height:34px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#fff;color:#1c1c1e;font-size:13px;padding:0 10px;margin-bottom:8px}
+.hi-edit .enote:focus{outline:none;border-color:#1D9E75}
+.hi-edit .erow{display:flex;gap:8px}
+.hi-edit .esave{flex:1;height:38px;border-radius:10px;border:none;background:#1D9E75;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+.hi-edit .ecancel{height:38px;padding:0 16px;border-radius:10px;border:0.5px solid rgba(0,0,0,.2);background:transparent;color:#1c1c1e;font-size:14px;cursor:pointer}
+.hi-edit .emeta{font-size:10px;color:#6e6e73;margin-bottom:8px}
+/* badges */
+.pbadge{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px}
+.pm{background:#FAEEDA;color:#854F0B}.pt{background:#E6F1FB;color:#185FA5}.pn{background:#EEEDFE;color:#3C3489}
+.sbadge{font-size:11px;padding:3px 8px;border-radius:20px;font-weight:600}
+.sok{background:#EAF3DE;color:#3B6D11}.swarn{background:#FAEEDA;color:#854F0B}.shigh{background:#FCEBEB;color:#A32D2D}
+/* export */
+.exprow{padding:0 16px 16px}
+.bexp{width:100%;height:42px;border:0.5px solid rgba(0,0,0,.2);border-radius:12px;background:transparent;color:#1c1c1e;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-weight:500}
+.bexp:active{background:#f2f2f7}
+/* confirm */
+.cnfbar{background:#FAEEDA;border-radius:12px;padding:11px 13px;margin:0 16px 10px;display:flex;align-items:center;gap:8px;font-size:13px;color:#854F0B}
+.cnfbar button{padding:5px 14px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:600}
+.cy{background:#854F0B;color:#fff}.cn{background:transparent;border:0.5px solid #854F0B;color:#854F0B}
+.nodata{text-align:center;padding:20px;color:#6e6e73;font-size:13px}
+/* empty */
+#es{text-align:center;padding:50px 20px;color:#6e6e73;font-size:14px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="hdr">
+  <h1>❤️ Monitor gestante</h1>
+  <p>Pressão arterial e batimentos cardíacos</p>
+</div>
+
+<div class="sec" style="margin-top:16px">
+  <div class="sec-ttl">Novo registro</div>
+  <div class="fgrid">
+    <div class="fld"><label>Sistólica</label><input type="number" id="sis" placeholder="120" inputmode="numeric"></div>
+    <div class="fld"><label>Diastólica</label><input type="number" id="dia" placeholder="80" inputmode="numeric"></div>
+    <div class="fld"><label>BPM</label><input type="number" id="bpm" placeholder="80" inputmode="numeric"></div>
+  </div>
+  <div class="nrow"><input type="text" id="note" placeholder="Observação: deitada, após caminhada..."></div>
+  <button class="bsave" onclick="save()">+ Registrar agora</button>
+</div>
+
+<div id="mc" style="display:none">
+<div class="sec">
+  <div class="tabs-nav">
+    <button class="tbt on" onclick="goTab('g',this)">Geral</button>
+    <button class="tbt" onclick="goTab('f',this)">Por período</button>
+    <button class="tbt" onclick="goTab('c',this)">Comparar</button>
+  </div>
+
+  <!-- GERAL -->
+  <div class="tc on" id="tg">
+    <div class="ww">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="wttl" id="wttl">Batimentos</div>
+          <div class="wbig" id="wbig">—</div>
+          <div class="wunit" id="wunit">bpm · média</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;margin-bottom:5px">Exibir</div>
+          <div class="wtabs">
+            <button class="wtab on" onclick="swMode('b',this)">BPM</button>
+            <button class="wtab" onclick="swMode('s',this)">SIS</button>
+            <button class="wtab" onclick="swMode('d',this)">DIA</button>
+          </div>
+        </div>
+      </div>
+      <div class="cwrap"><canvas id="wc" role="img" aria-label="Gráfico geral"></canvas></div>
+      <div class="xlbl" id="wxl"></div>
+      <div class="wstats">
+        <div class="wst"><div class="wstv" id="wmn">—</div><div class="wstl">mínimo</div></div>
+        <div class="wst"><div class="wstv" id="wav">—</div><div class="wstl">média</div></div>
+        <div class="wst"><div class="wstv" id="wmx">—</div><div class="wstl">máximo</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTRO -->
+  <div class="tc" id="tf">
+    <div style="padding:12px 16px 4px;font-size:12px;color:#6e6e73;font-weight:500">Filtrar por turno</div>
+    <div class="pills">
+      <button class="pill on" onclick="setTurno('a',this)">Todos</button>
+      <button class="pill" onclick="setTurno('m',this)">🌅 Manhã</button>
+      <button class="pill" onclick="setTurno('t',this)">☀️ Tarde</button>
+      <button class="pill" onclick="setTurno('n',this)">🌙 Noite</button>
+    </div>
+    <div style="padding:10px 16px 4px;font-size:12px;color:#6e6e73;font-weight:500">Intervalo de datas</div>
+    <div class="drow">
+      <div><label>De</label><input type="date" id="ff" onchange="renderF()"></div>
+      <div><label>Até</label><input type="date" id="ft" onchange="renderF()"></div>
+    </div>
+    <button class="clrbtn" onclick="clrF()">Limpar filtros</button>
+    <div class="ww" style="margin:0 16px 12px">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Resultado — sistólica (colorida) / diastólica (azul) / bpm (cinza)</div>
+      <div class="cwrap"><canvas id="fc" role="img" aria-label="Gráfico filtrado"></canvas></div>
+      <div class="xlbl" id="fxl"></div>
+      <div class="wstats">
+        <div class="wst"><div class="wstv" id="fmn">—</div><div class="wstl">SIS mín</div></div>
+        <div class="wst"><div class="wstv" id="fav">—</div><div class="wstl">SIS média</div></div>
+        <div class="wst"><div class="wstv" id="fmx">—</div><div class="wstl">SIS máx</div></div>
+      </div>
+    </div>
+    <div id="fl" class="hlist"></div>
+  </div>
+
+  <!-- COMPARAR -->
+  <div class="tc" id="tc2">
+    <div style="padding:12px 16px 6px;font-size:12px;color:#6e6e73;font-weight:500">Selecione dois períodos para comparar</div>
+    <div class="drow2">
+      <div><label style="color:#1D9E75;font-weight:600">● Período A — de</label><input type="date" id="caf" onchange="renderC()"></div>
+      <div><label style="color:#1D9E75">até</label><input type="date" id="cat" onchange="renderC()"></div>
+      <div><label style="color:#378ADD;font-weight:600">● Período B — de</label><input type="date" id="cbf" onchange="renderC()"></div>
+      <div><label style="color:#378ADD">até</label><input type="date" id="cbt" onchange="renderC()"></div>
+    </div>
+    <div id="cr"><div class="nodata">Selecione os dois períodos acima</div></div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="sec-ttl">Histórico completo</div>
+  <div id="hist"></div>
+  <div class="exprow"><button class="bexp" onclick="expTxt()">⬇ Exportar para obstetra (.txt)</button></div>
+</div>
+</div>
+
+<div id="es">
+  <div style="font-size:40px;margin-bottom:10px">📋</div>
+  Nenhum registro ainda.<br>Adicione o primeiro acima.
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+let R=JSON.parse(localStorage.getItem('gv3')||'[]');
+let wC=null,fC=null,cC=null,mode='b',turno='a',pdel=null,pedit=null;
+
+const PN={b:'Batimentos',s:'Sistólica',d:'Diastólica'};
+const PU={b:'bpm · média',s:'mmHg sistólica · média',d:'mmHg diastólica · média'};
+
+function per(ts){const h=new Date(ts).getHours();if(h>=5&&h<12)return{l:'manhã',k:'m',c:'pm',e:'🌅'};if(h>=12&&h<18)return{l:'tarde',k:'t',c:'pt',e:'☀️'};return{l:'noite',k:'n',c:'pn',e:'🌙'};}
+function sts(s,d){if(s>=140||d>=90)return{l:'Alta',c:'shigh'};if(s>=130||d>=80)return{l:'Elevada',c:'swarn'};return{l:'Normal',c:'sok'};}
+function fmt(ts){const dt=new Date(ts);return dt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});}
+function ds(ts){return new Date(ts).toISOString().slice(0,10);}
+function col(v,m){if(m==='b'){if(v<60)return'#378ADD';if(v<80)return'#1D9E75';if(v<100)return'#EF9F27';return'#E24B4A';}if(m==='s'){if(v<120)return'#1D9E75';if(v<130)return'#EF9F27';if(v<140)return'#D85A30';return'#E24B4A';}if(v<80)return'#1D9E75';if(v<85)return'#EF9F27';if(v<90)return'#D85A30';return'#E24B4A';}
+function mkGrad(cv,vals,m){const ctx=cv.getContext('2d');const g=ctx.createLinearGradient(0,0,cv.width,0);if(vals.length===1){g.addColorStop(0,col(vals[0],m));return g;}vals.forEach((v,i)=>g.addColorStop(i/(vals.length-1),col(v,m)));return g;}
+function avg(arr,k){return arr.length?Math.round(arr.reduce((a,r)=>a+r[k],0)/arr.length):0;}
+
+function save(){
+  const s=parseInt(document.getElementById('sis').value);
+  const d=parseInt(document.getElementById('dia').value);
+  const b=parseInt(document.getElementById('bpm').value);
+  const n=document.getElementById('note').value.trim();
+  if(!s||!d||!b||s<50||s>220||d<30||d>150||b<30||b>220){alert('Preencha os três campos com valores válidos.');return;}
+  R.unshift({ts:Date.now(),s,d,b,n});
+  localStorage.setItem('gv3',JSON.stringify(R));
+  ['sis','dia','bpm','note'].forEach(id=>document.getElementById(id).value='');
+  render();
+}
+
+function goTab(t,el){
+  document.querySelectorAll('.tbt').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.tc').forEach(tc=>tc.classList.remove('on'));
+  document.getElementById(t==='g'?'tg':t==='f'?'tf':'tc2').classList.add('on');
+  if(t==='f') renderF();
+  if(t==='c') renderC();
+}
+
+function swMode(m,el){
+  mode=m;
+  document.querySelectorAll('.wtab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  rWatch([...R].sort((a,b)=>a.ts-b.ts));
+}
+
+function setTurno(t,el){
+  turno=t;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  renderF();
+}
+
+function clrF(){
+  turno='a';
+  document.getElementById('ff').value='';
+  document.getElementById('ft').value='';
+  document.querySelectorAll('.pill').forEach((p,i)=>p.classList.toggle('on',i===0));
+  renderF();
+}
+
+function rWatch(sorted){
+  if(!sorted.length) return;
+  const key={b:'b',s:'s',d:'d'}[mode];
+  const vals=sorted.map(r=>r[key]);
+  const mn=Math.min(...vals),mx=Math.max(...vals),av=avg(sorted,key);
+  document.getElementById('wttl').textContent=PN[mode];
+  document.getElementById('wbig').textContent=av;
+  document.getElementById('wunit').textContent=PU[mode];
+  document.getElementById('wmn').textContent=mn;
+  document.getElementById('wav').textContent=av;
+  document.getElementById('wmx').textContent=mx;
+  const step=Math.max(1,Math.floor(sorted.length/5));
+  document.getElementById('wxl').innerHTML=sorted.filter((_,i)=>i%step===0||i===sorted.length-1)
+    .map(r=>{const p=per(r.ts);return`<span>${p.e} ${new Date(r.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span>`;}).join('');
+  const cv=document.getElementById('wc');
+  cv.width=cv.parentElement.clientWidth||320;cv.height=90;
+  if(wC){wC.destroy();wC=null;}
+  wC=new Chart(cv,{type:'line',data:{labels:sorted.map(r=>fmt(r.ts)),datasets:[{data:vals,borderColor:mkGrad(cv,vals,mode),backgroundColor:'rgba(255,255,255,0.03)',tension:.4,pointRadius:vals.map((_,i)=>i===vals.length-1?4:0),pointBackgroundColor:vals.map((v,i)=>i===vals.length-1?col(v,mode):'transparent'),borderWidth:2,fill:true}]},
+    options:{responsive:false,animation:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const r=sorted[ctx.dataIndex];const p=per(r.ts);return`${ctx.parsed.y} · ${p.e} ${p.l}`;} }}},scales:{x:{display:false},y:{display:false,suggestedMin:mn-10,suggestedMax:mx+10}}}});
+}
+
+function renderF(){
+  const from=document.getElementById('ff').value;
+  const to=document.getElementById('ft').value;
+  let F=[...R].sort((a,b)=>a.ts-b.ts);
+  if(turno!=='a') F=F.filter(r=>per(r.ts).k===turno);
+  if(from) F=F.filter(r=>ds(r.ts)>=from);
+  if(to) F=F.filter(r=>ds(r.ts)<=to);
+  const cv=document.getElementById('fc');
+  cv.width=cv.parentElement.clientWidth||320;cv.height=90;
+  if(fC){fC.destroy();fC=null;}
+  if(!F.length){
+    ['fxl','fl'].forEach(id=>document.getElementById(id).innerHTML='');
+    document.getElementById('fl').innerHTML='<div class="nodata">Nenhum registro neste filtro</div>';
+    ['fmn','fav','fmx'].forEach(id=>document.getElementById(id).textContent='—');
+    return;
+  }
+  const vs=F.map(r=>r.s);
+  const mn=Math.min(...vs),mx=Math.max(...vs),av=avg(F,'s');
+  document.getElementById('fmn').textContent=mn;
+  document.getElementById('fav').textContent=av;
+  document.getElementById('fmx').textContent=mx;
+  const step=Math.max(1,Math.floor(F.length/5));
+  document.getElementById('fxl').innerHTML=F.filter((_,i)=>i%step===0||i===F.length-1)
+    .map(r=>{const p=per(r.ts);return`<span>${p.e} ${new Date(r.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}</span>`;}).join('');
+  fC=new Chart(cv,{type:'line',data:{labels:F.map(r=>fmt(r.ts)),datasets:[
+    {data:F.map(r=>r.s),borderColor:mkGrad(cv,vs,'s'),backgroundColor:'rgba(255,255,255,0.03)',tension:.4,pointRadius:2,borderWidth:2,fill:true},
+    {data:F.map(r=>r.d),borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,.06)',tension:.4,pointRadius:2,borderWidth:1.5,fill:true},
+    {data:F.map(r=>r.b),borderColor:'#666',backgroundColor:'transparent',tension:.4,pointRadius:2,borderWidth:1,borderDash:[3,3]}
+  ]},options:{responsive:false,animation:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false,suggestedMin:40,suggestedMax:mx+15}}}});
+  document.getElementById('fl').innerHTML=[...F].reverse().map(r=>{
+    const st=sts(r.s,r.d);const p=per(r.ts);
+    return`<div class="hi"><div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.s}/${r.d} mmHg · ${r.b} bpm</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div><div class="hrgt"><span class="pbadge ${p.c}">${p.e} ${p.l}</span><span class="sbadge ${st.c}">${st.l}</span></div></div>`;
+  }).join('');
+}
+
+function renderC(){
+  const af=document.getElementById('caf').value,at=document.getElementById('cat').value;
+  const bf=document.getElementById('cbf').value,bt=document.getElementById('cbt').value;
+  if(!af||!at||!bf||!bt){document.getElementById('cr').innerHTML='<div class="nodata">Selecione os dois períodos acima</div>';return;}
+  const srt=[...R].sort((a,b)=>a.ts-b.ts);
+  const A=srt.filter(r=>ds(r.ts)>=af&&ds(r.ts)<=at);
+  const B=srt.filter(r=>ds(r.ts)>=bf&&ds(r.ts)<=bt);
+  if(!A.length||!B.length){document.getElementById('cr').innerHTML='<div class="nodata">Um dos períodos não tem registros</div>';return;}
+  const as=avg(A,'s'),ad=avg(A,'d'),ab=avg(A,'b');
+  const bs=avg(B,'s'),bd=avg(B,'d'),bb=avg(B,'b');
+  const dc=v=>v>0?'dpos':v<0?'dneg':'dzero';
+  const df=v=>(v>0?'+':'')+v;
+  document.getElementById('cr').innerHTML=`
+    <div class="cmpgrid">
+      <div class="ccard a"><div class="clbl">● Período A</div><div class="cval">${as}/${ad}</div><div class="csub">mmHg · ${ab} bpm</div><div class="csub" style="margin-top:4px">${A.length} registro${A.length!==1?'s':''}</div></div>
+      <div class="ccard b"><div class="clbl">● Período B</div><div class="cval">${bs}/${bd}</div><div class="csub">mmHg · ${bb} bpm</div><div class="csub" style="margin-top:4px">${B.length} registro${B.length!==1?'s':''}</div></div>
+    </div>
+    <div class="ww" style="margin:0 16px 8px">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Sistólica — <span style="color:#1D9E75">■</span> A vs <span style="color:#378ADD">■</span> B</div>
+      <div class="cwrap" style="height:110px"><canvas id="cc" role="img" aria-label="Comparativo A vs B"></canvas></div>
+    </div>
+    <div class="deltarow">
+      <div class="dc"><div class="dv ${dc(bs-as)}">${df(bs-as)}</div><div class="dl">Sistólica</div></div>
+      <div class="dc"><div class="dv ${dc(bd-ad)}">${df(bd-ad)}</div><div class="dl">Diastólica</div></div>
+      <div class="dc"><div class="dv ${dc(bb-ab)}">${df(bb-ab)}</div><div class="dl">BPM</div></div>
+    </div>`;
+  setTimeout(()=>{
+    const cv=document.getElementById('cc');if(!cv)return;
+    cv.width=cv.parentElement.clientWidth||320;cv.height=110;
+    if(cC){cC.destroy();cC=null;}
+    const allS=[...A.map(r=>r.s),...B.map(r=>r.s)];
+    cC=new Chart(cv,{type:'line',data:{
+      labels:Array.from({length:Math.max(A.length,B.length)},(_,i)=>i+1),
+      datasets:[
+        {label:'A',data:A.map(r=>r.s),borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,.12)',tension:.4,pointRadius:2,borderWidth:2,fill:true},
+        {label:'B',data:B.map(r=>r.s),borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,.12)',tension:.4,pointRadius:2,borderWidth:2,fill:true}
+      ]
+    },options:{responsive:false,animation:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false,suggestedMin:Math.min(...allS)-10,suggestedMax:Math.max(...allS)+15}}}});
+  },60);
+}
+
+function render(){
+  const has=R.length>0;
+  document.getElementById('mc').style.display=has?'':'none';
+  document.getElementById('es').style.display=has?'none':'';
+  if(!has) return;
+  rWatch([...R].sort((a,b)=>a.ts-b.ts));
+  let h='';
+  R.forEach((r,i)=>{
+    const st=sts(r.s,r.d);const p=per(r.ts);
+    if(pedit===i){
+      h+=`<div class="hi-edit" id="es_${i}">
+        <div class="emeta">${fmt(r.ts)} · ${p.e} ${p.l}</div>
+        <div class="egrid">
+          <div><label style="font-size:10px;color:#6e6e73;display:block;margin-bottom:3px">Sistólica</label><input id="es_${i}_s" type="number" inputmode="numeric" value="${r.s}"></div>
+          <div><label style="font-size:10px;color:#6e6e73;display:block;margin-bottom:3px">Diastólica</label><input id="es_${i}_d" type="number" inputmode="numeric" value="${r.d}"></div>
+          <div><label style="font-size:10px;color:#6e6e73;display:block;margin-bottom:3px">BPM</label><input id="es_${i}_b" type="number" inputmode="numeric" value="${r.b}"></div>
+        </div>
+        <input class="enote" id="es_${i}_n" type="text" placeholder="Observação..." value="${r.n||''}">
+        <div class="erow">
+          <button class="esave" onclick="doEdit(${i})">✓ Salvar</button>
+          <button class="ecancel" onclick="cnlEdit()">Cancelar</button>
+          <button class="delbtn" style="margin-left:4px;font-size:22px" onclick="cnfDel(${i})" aria-label="Excluir">🗑</button>
+        </div>
+        ${pdel===i?`<div class="cnfbar" style="margin:8px 0 0"><span style="flex:1">Confirmar exclusão?</span><button class="cy" onclick="doDel()">Sim</button><button class="cn" onclick="cnlDel()" style="margin-left:6px">Não</button></div>`:''}
+      </div>`;
+    } else {
+      h+=`<div class="hi" onclick="startEdit(${i})" style="cursor:pointer">
+        <div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.s}/${r.d} mmHg · ${r.b} bpm</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div>
+        <div class="hrgt">
+          <div style="display:flex;gap:4px;align-items:center"><span class="pbadge ${p.c}">${p.e} ${p.l}</span><span style="font-size:12px;color:#aeaeb2">✏️</span></div>
+          <span class="sbadge ${st.c}">${st.l}</span>
+        </div>
+      </div>`;
+    }
+  });
+  document.getElementById('hist').innerHTML=`<div class="hlist">${h}</div>`;
+}
+
+function cnfDel(i){pdel=i;render();}
+function doDel(){if(pdel!==null){R.splice(pdel,1);localStorage.setItem('gv3',JSON.stringify(R));pdel=null;pedit=null;render();}}
+function cnlDel(){pdel=null;render();}
+function startEdit(i){pedit=i;pdel=null;render();setTimeout(()=>{const el=document.getElementById('es_'+i);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50);}
+function cnlEdit(){pedit=null;render();}
+function doEdit(i){
+  const s=parseInt(document.getElementById('es_'+i+'_s').value);
+  const d=parseInt(document.getElementById('es_'+i+'_d').value);
+  const b=parseInt(document.getElementById('es_'+i+'_b').value);
+  const n=document.getElementById('es_'+i+'_n').value.trim();
+  if(!s||!d||!b||s<50||s>220||d<30||d>150||b<30||b>220){alert('Valores inválidos.');return;}
+  R[i]={...R[i],s,d,b,n};
+  localStorage.setItem('gv3',JSON.stringify(R));
+  pedit=null;render();
+}
+
+function expTxt(){
+  let t='RELATÓRIO — MONITOR GESTANTE\n==============================\n\n';
+  t+=`Gerado em: ${new Date().toLocaleString('pt-BR')}\nTotal de registros: ${R.length}\n\n`;
+  if(R.length){t+=`Médias gerais: ${avg(R,'s')}/${avg(R,'d')} mmHg · ${avg(R,'b')} bpm\n\n`;}
+  t+='REGISTROS (mais recente primeiro):\n';
+  R.forEach(r=>{const p=per(r.ts);t+=`${fmt(r.ts)} [${p.l}] — ${r.s}/${r.d} mmHg, ${r.b} bpm${r.n?' ('+r.n+')':''}\n`;});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='monitor_gestante.txt';a.click();
+}
+
+render();
+</script>
+</body>
+</html>
