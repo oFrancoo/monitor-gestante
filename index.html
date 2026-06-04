@@ -92,6 +92,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dpp-bar-bg{background:#f2f2f7;border-radius:20px;height:6px;overflow:hidden}
 .dpp-bar-fill{height:6px;border-radius:20px;background:linear-gradient(90deg,#1D9E75,#378ADD);transition:width .4s}
 .dpp-bar-label{display:flex;justify-content:space-between;font-size:10px;color:#aeaeb2;margin-top:4px}
+.dpp-cal-row{margin-top:10px;padding-top:10px;border-top:0.5px solid rgba(0,0,0,.08);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dpp-cal-row label{font-size:11px;color:#6e6e73;white-space:nowrap}
+.dpp-cal-row input{width:60px;height:32px;border:0.5px solid rgba(0,0,0,.15);border-radius:8px;background:#f2f2f7;color:#1c1c1e;font-size:14px;font-weight:600;text-align:center;padding:0 4px}
+.dpp-cal-row button{height:32px;padding:0 12px;border-radius:8px;border:none;background:#1D9E75;color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.dpp-cal-info{font-size:10px;color:#aeaeb2;width:100%}
 
 
 
@@ -167,7 +172,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <div class="dpp-bar-wrap">
     <div class="dpp-bar-bg"><div class="dpp-bar-fill" id="dpp-bar" style="width:0%"></div></div>
-    <div class="dpp-bar-label"><span>concepção</span><span id="dpp-pct">0%</span><span>nascimento</span></div>
+    <div class="dpp-bar-label"><span>início</span><span id="dpp-pct">0%</span><span>nascimento</span></div>
+  </div>
+  <div class="dpp-cal-row">
+    <label>📍 Calibrar: hoje estou na semana</label>
+    <input type="number" id="cal-sem" inputmode="numeric" placeholder="10" min="1" max="42">
+    <button onclick="calibrarSemana()">OK</button>
+    <div class="dpp-cal-info" id="cal-info"></div>
   </div>
 </div>
 
@@ -580,8 +591,11 @@ function expTxt(){
 
 
 // DPP
-const DPP_TOTAL_DAYS = 280; // 40 semanas
 function getDpp(){return localStorage.getItem('dpp')||'2026-12-26';}
+function getCalibration(){
+  const raw=localStorage.getItem('dpp_cal');
+  return raw?JSON.parse(raw):null;
+}
 function saveDpp(){
   const v=document.getElementById('dpp-input').value;
   if(v){localStorage.setItem('dpp',v);document.getElementById('dpp-edit-row').classList.remove('show');}
@@ -593,18 +607,45 @@ function toggleDppEdit(){
   row.classList.toggle('show',!showing);
   if(!showing) document.getElementById('dpp-input').value=getDpp();
 }
+function calibrarSemana(){
+  const sem=parseInt(document.getElementById('cal-sem').value);
+  if(!sem||sem<1||sem>42){alert('Semana inválida (1-42).');return;}
+  // salva: em qual data estava em qual semana
+  const hoje=new Date();hoje.setHours(12,0,0,0);
+  localStorage.setItem('dpp_cal',JSON.stringify({ts:hoje.getTime(),sem}));
+  document.getElementById('cal-sem').value='';
+  renderDpp();
+}
 function renderDpp(){
   const dpp=getDpp();
   const dppDate=new Date(dpp+'T12:00:00');
-  const today=new Date();
-  today.setHours(12,0,0,0);
+  const today=new Date();today.setHours(12,0,0,0);
   const diffMs=dppDate-today;
   const diasRestantes=Math.max(0,Math.round(diffMs/(1000*60*60*24)));
-  const diasDecorridos=DPP_TOTAL_DAYS-diasRestantes;
-  const semanas=Math.floor(diasDecorridos/7);
   const meses=(diasRestantes/30.44).toFixed(1);
-  const pct=Math.min(100,Math.max(0,Math.round(diasDecorridos/DPP_TOTAL_DAYS*100)));
-  document.getElementById('dpp-sem').textContent=semanas>0?semanas+'sem':'—';
+
+  // calcula semanas com calibração se disponível
+  let semanas;
+  const cal=getCalibration();
+  if(cal){
+    const diasDesdeCalibacao=Math.round((today-new Date(cal.ts))/(1000*60*60*24));
+    const semanasDecorridas=diasDesdeCalibacao/7;
+    semanas=Math.floor(cal.sem+semanasDecorridas);
+    const calDate=new Date(cal.ts);
+    document.getElementById('cal-info').textContent=
+      '📍 Calibrado em '+calDate.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' com '+cal.sem+' semanas';
+  } else {
+    // fallback: calcula pela DPP assumindo 40 semanas
+    const totalDias=Math.round((dppDate-today+(40*7*24*60*60*1000))/(1000*60*60*24));
+    const diasDecorridos=(40*7)-diasRestantes;
+    semanas=Math.max(0,Math.floor(diasDecorridos/7));
+    document.getElementById('cal-info').textContent='💡 Calibre informando a semana atual acima';
+  }
+
+  const totalSemanas=Math.round((dppDate.getTime()+(40*7*24*60*60*1000/40*0))/(1000*60*60*24));
+  const pct=Math.min(100,Math.max(0,Math.round(semanas/40*100)));
+
+  document.getElementById('dpp-sem').textContent=semanas>=0?semanas+'sem':'—';
   document.getElementById('dpp-dias').textContent=diasRestantes;
   document.getElementById('dpp-mes').textContent=meses+'m';
   document.getElementById('dpp-bar').style.width=pct+'%';
