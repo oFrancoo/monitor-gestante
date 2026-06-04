@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Monitor">
-<title>Monitor Gestante</title>
+<meta name="apple-mobile-web-app-title" content="Davi 💙">
+<title>Gestação do Davi 💙</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f2f2f7;color:#1c1c1e;min-height:100vh}
 .app{max-width:430px;margin:0 auto;padding:0 0 90px}
 /* header */
-.hdr{background:#fff;border-bottom:0.5px solid rgba(0,0,0,.12);padding:14px 20px;position:sticky;top:0;z-index:50}
+.hdr{background:#fff;border-bottom:0.5px solid rgba(0,0,0,.12);padding:14px 20px;position:sticky;top:0;z-index:50;text-align:center}
 .hdr h1{font-size:17px;font-weight:600}
 .hdr p{font-size:12px;color:#6e6e73;margin-top:2px}
 /* section */
@@ -43,7 +43,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .wtabs{display:flex;gap:5px;margin-top:8px}
 .wtab{font-size:12px;padding:4px 11px;border-radius:20px;border:none;cursor:pointer;font-weight:500;background:#2a2a2a;color:#888}
 .wtab.on{background:#333;color:#fff}
-.cwrap{position:relative;height:90px;margin:10px 0 4px}
+.cwrap{position:relative;height:110px;margin:10px 0 4px}
 .xlbl{display:flex;justify-content:space-between;font-size:9px;color:#555;flex-wrap:wrap;gap:2px;margin-top:4px}
 .wstats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;padding-top:12px;border-top:0.5px solid #333}
 .wst{text-align:center}
@@ -74,6 +74,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dv{font-size:18px;font-weight:600}
 .dl{font-size:9px;color:#6e6e73;margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
 .dpos{color:#E24B4A}.dneg{color:#1D9E75}.dzero{color:#6e6e73}
+
+/* dpp card */
+.dpp-card{background:#fff;margin:12px 16px 0;border-radius:16px;border:0.5px solid rgba(0,0,0,.1);overflow:hidden;padding:14px 16px 16px}
+.dpp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.dpp-title{font-size:11px;font-weight:600;color:#6e6e73;text-transform:uppercase;letter-spacing:.06em}
+.dpp-edit{font-size:11px;color:#1D9E75;background:none;border:none;cursor:pointer;font-weight:500}
+.dpp-date-row{display:none;margin-bottom:10px}
+.dpp-date-row.show{display:flex;align-items:center;gap:8px}
+.dpp-date-row input[type=date]{flex:1;height:36px;border:0.5px solid rgba(0,0,0,.15);border-radius:10px;background:#f2f2f7;color:#1c1c1e;font-size:13px;padding:0 10px}
+.dpp-date-row button{height:36px;padding:0 14px;border-radius:10px;border:none;background:#1D9E75;color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+.dpp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.dpp-item{background:#f2f2f7;border-radius:12px;padding:10px 8px;text-align:center}
+.dpp-val{font-size:22px;font-weight:700;color:#1c1c1e}
+.dpp-lbl{font-size:10px;color:#6e6e73;margin-top:2px}
+.dpp-bar-wrap{margin-top:12px}
+.dpp-bar-bg{background:#f2f2f7;border-radius:20px;height:6px;overflow:hidden}
+.dpp-bar-fill{height:6px;border-radius:20px;background:linear-gradient(90deg,#1D9E75,#378ADD);transition:width .4s}
+.dpp-bar-label{display:flex;justify-content:space-between;font-size:10px;color:#aeaeb2;margin-top:4px}
+
+
+
+/* bottom nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:0.5px solid rgba(0,0,0,.12);display:flex;z-index:100;max-width:430px;margin:0 auto}
+.bnav-btn{flex:1;padding:10px 0 14px;font-size:11px;font-weight:500;background:none;border:none;cursor:pointer;color:#aeaeb2;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bnav-btn.on{color:#1D9E75}
+.bnav-icon{font-size:22px;line-height:1}
+
+/* peso */
+.peso-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 14px}
+.peso-form-row .fld input{font-size:22px}
+
 /* history */
 .hlist{padding:0 16px 14px;display:flex;flex-direction:column;gap:7px}
 .hi{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:11px 13px;background:#f2f2f7;border-radius:12px}
@@ -115,11 +146,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <body>
 <div class="app">
 <div class="hdr">
-  <h1>❤️ Monitor gestante</h1>
-  <p>Pressão arterial e batimentos cardíacos</p>
+  <h1>💙 Gestação do Davi</h1>
+  <p>Monitorando com amor cada batidinha 🤍</p>
 </div>
 
-<div class="sec" style="margin-top:16px">
+<div id="page-pressao">
+<div class="dpp-card" id="dpp-card">
+  <div class="dpp-top">
+    <div class="dpp-title">🗓 Previsão de nascimento</div>
+    <button class="dpp-edit" onclick="toggleDppEdit()">✏️ editar data</button>
+  </div>
+  <div class="dpp-date-row" id="dpp-edit-row">
+    <input type="date" id="dpp-input" value="2026-12-26">
+    <button onclick="saveDpp()">Salvar</button>
+  </div>
+  <div class="dpp-grid">
+    <div class="dpp-item"><div class="dpp-val" id="dpp-sem">—</div><div class="dpp-lbl">semanas</div></div>
+    <div class="dpp-item"><div class="dpp-val" id="dpp-dias">—</div><div class="dpp-lbl">dias restantes</div></div>
+    <div class="dpp-item"><div class="dpp-val" id="dpp-mes">—</div><div class="dpp-lbl">meses</div></div>
+  </div>
+  <div class="dpp-bar-wrap">
+    <div class="dpp-bar-bg"><div class="dpp-bar-fill" id="dpp-bar" style="width:0%"></div></div>
+    <div class="dpp-bar-label"><span>concepção</span><span id="dpp-pct">0%</span><span>nascimento</span></div>
+  </div>
+</div>
+
+<div class="sec" style="margin-top:12px">
   <div class="sec-ttl">Novo registro</div>
   <div class="fgrid">
     <div class="fld"><label>Sistólica</label><input type="number" id="sis" placeholder="120" inputmode="numeric"></div>
@@ -218,6 +270,94 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div style="font-size:40px;margin-bottom:10px">📋</div>
   Nenhum registro ainda.<br>Adicione o primeiro acima.
 </div>
+</div><!-- /page-pressao -->
+<!-- SEÇÃO PESO -->
+<div id="page-peso" style="display:none">
+
+<div class="sec" style="margin-top:16px">
+  <div class="sec-ttl">Registrar peso</div>
+  <div class="peso-form-row">
+    <div class="fld"><label>Peso (kg)</label><input type="number" id="wpeso" placeholder="70.5" inputmode="decimal" step="0.1"></div>
+    <div class="fld"><label>Semana gestacional</label><input type="number" id="wsem" placeholder="20" inputmode="numeric"></div>
+  </div>
+  <div class="nrow"><input type="text" id="wnote" placeholder="Observação: após refeição, em jejum..."></div>
+  <button class="bsave" onclick="savePeso()">+ Registrar peso</button>
+</div>
+
+<div id="peso-main" style="display:none">
+  <div class="sec">
+    <div class="sec-ttl">Evolução do peso</div>
+    <div class="ww">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div class="wttl">Peso atual</div>
+          <div class="wbig" id="pw-last">—</div>
+          <div class="wunit">kg · último registro</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:#555;text-transform:uppercase;margin-bottom:5px">Ganho total</div>
+          <div style="font-size:22px;font-weight:600;color:#fff" id="pw-ganho">—</div>
+          <div style="font-size:10px;color:#666">kg na gestação</div>
+        </div>
+      </div>
+      <div class="cwrap" style="height:120px"><canvas id="pc" role="img" aria-label="Gráfico de peso"></canvas></div>
+      <div class="xlbl" id="pxl"></div>
+      <div class="wstats">
+        <div class="wst"><div class="wstv" id="pw-min">—</div><div class="wstl">mínimo</div></div>
+        <div class="wst"><div class="wstv" id="pw-avg">—</div><div class="wstl">média</div></div>
+        <div class="wst"><div class="wstv" id="pw-max">—</div><div class="wstl">máximo</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtro peso -->
+  <div class="sec">
+    <div class="sec-ttl">Filtrar por período</div>
+    <div class="drow" style="padding:10px 16px">
+      <div><label>De</label><input type="date" id="pf-from" onchange="renderPesoFiltro()"></div>
+      <div><label>Até</label><input type="date" id="pf-to" onchange="renderPesoFiltro()"></div>
+    </div>
+    <button class="clrbtn" onclick="clrPesoFiltro()">Limpar filtro</button>
+    <div class="ww" style="margin:0 16px 12px">
+      <div style="font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Peso no período selecionado</div>
+      <div class="cwrap" style="height:100px"><canvas id="pfc" role="img" aria-label="Gráfico peso filtrado"></canvas></div>
+      <div class="xlbl" id="pfxl"></div>
+      <div class="wstats">
+        <div class="wst"><div class="wstv" id="pf-min">—</div><div class="wstl">mínimo</div></div>
+        <div class="wst"><div class="wstv" id="pf-avg">—</div><div class="wstl">média</div></div>
+        <div class="wst"><div class="wstv" id="pf-max">—</div><div class="wstl">máximo</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Histórico peso -->
+  <div class="sec">
+    <div class="sec-ttl">Histórico de peso</div>
+    <div id="peso-hist"></div>
+    <div class="exprow"><button class="bexp" onclick="expPesoTxt()">⬇ Exportar histórico de peso (.txt)</button></div>
+  </div>
+</div>
+
+<div id="peso-empty" style="text-align:center;padding:40px 20px;color:#6e6e73;font-size:14px">
+  <div style="font-size:40px;margin-bottom:10px">⚖️</div>
+  Nenhum peso registrado ainda.<br>Adicione o primeiro acima.
+</div>
+
+</div>
+<!-- FIM SEÇÃO PESO -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <button class="bnav-btn on" id="bn-pressao" onclick="goPage('pressao')">
+    <span class="bnav-icon">❤️</span>
+    <span>Pressão</span>
+  </button>
+  <button class="bnav-btn" id="bn-peso" onclick="goPage('peso')">
+    <span class="bnav-icon">⚖️</span>
+    <span>Peso</span>
+  </button>
+</div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
@@ -296,8 +436,8 @@ function rWatch(sorted){
   const cv=document.getElementById('wc');
   cv.width=cv.parentElement.clientWidth||320;cv.height=90;
   if(wC){wC.destroy();wC=null;}
-  wC=new Chart(cv,{type:'line',data:{labels:sorted.map(r=>fmt(r.ts)),datasets:[{data:vals,borderColor:mkGrad(cv,vals,mode),backgroundColor:'rgba(255,255,255,0.03)',tension:.4,pointRadius:vals.map((_,i)=>i===vals.length-1?4:0),pointBackgroundColor:vals.map((v,i)=>i===vals.length-1?col(v,mode):'transparent'),borderWidth:2,fill:true}]},
-    options:{responsive:false,animation:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{const r=sorted[ctx.dataIndex];const p=per(r.ts);return`${ctx.parsed.y} · ${p.e} ${p.l}`;} }}},scales:{x:{display:false},y:{display:false,suggestedMin:mn-10,suggestedMax:mx+10}}}});
+  wC=new Chart(cv,{type:'line',data:{labels:sorted.map(r=>fmt(r.ts)),datasets:[{data:vals,borderColor:mkGrad(cv,vals,mode),backgroundColor:'rgba(255,255,255,0.04)',tension:.4,pointRadius:3,pointHoverRadius:6,pointBackgroundColor:vals.map(v=>col(v,mode)),pointBorderColor:'transparent',borderWidth:2,fill:true}]},
+    options:{responsive:false,animation:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(0,0,0,.85)',titleColor:'#aaa',bodyColor:'#fff',padding:8,displayColors:false,callbacks:{title:ctx=>{const r=sorted[ctx[0].dataIndex];const p=per(r.ts);return`${fmt(r.ts)} · ${p.e} ${p.l}`;},label:ctx=>`${ctx.parsed.y} ${PU[mode].split(' · ')[0]}`}}},scales:{x:{display:false},y:{display:true,position:'left',grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#666',font:{size:9},maxTicksLimit:4},border:{display:false},suggestedMin:mn-10,suggestedMax:mx+10}}}});
 }
 
 function renderF(){
@@ -331,7 +471,7 @@ function renderF(){
   ]},options:{responsive:false,animation:false,plugins:{legend:{display:false}},scales:{x:{display:false},y:{display:false,suggestedMin:40,suggestedMax:mx+15}}}});
   document.getElementById('fl').innerHTML=[...F].reverse().map(r=>{
     const st=sts(r.s,r.d);const p=per(r.ts);
-    return`<div class="hi"><div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.s}/${r.d} mmHg · ${r.b} bpm</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div><div class="hrgt"><span class="pbadge ${p.c}">${p.e} ${p.l}</span><span class="sbadge ${st.c}">${st.l}</span></div></div>`;
+    return`<div class="hi"><div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.s}/${r.d} mmHg · ${r.b} bpm</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div><div class="hrgt"><span class="pbadge ${p.c}">${p.e} ${p.l}</span></div></div>`;
   }).join('');
 }
 
@@ -406,7 +546,6 @@ function render(){
         <div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.s}/${r.d} mmHg · ${r.b} bpm</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div>
         <div class="hrgt">
           <div style="display:flex;gap:4px;align-items:center"><span class="pbadge ${p.c}">${p.e} ${p.l}</span><span style="font-size:12px;color:#aeaeb2">✏️</span></div>
-          <span class="sbadge ${st.c}">${st.l}</span>
         </div>
       </div>`;
     }
@@ -437,6 +576,247 @@ function expTxt(){
   t+='REGISTROS (mais recente primeiro):\n';
   R.forEach(r=>{const p=per(r.ts);t+=`${fmt(r.ts)} [${p.l}] — ${r.s}/${r.d} mmHg, ${r.b} bpm${r.n?' ('+r.n+')':''}\n`;});
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='monitor_gestante.txt';a.click();
+}
+
+
+// DPP
+const DPP_TOTAL_DAYS = 280; // 40 semanas
+function getDpp(){return localStorage.getItem('dpp')||'2026-12-26';}
+function saveDpp(){
+  const v=document.getElementById('dpp-input').value;
+  if(v){localStorage.setItem('dpp',v);document.getElementById('dpp-edit-row').classList.remove('show');}
+  renderDpp();
+}
+function toggleDppEdit(){
+  const row=document.getElementById('dpp-edit-row');
+  const showing=row.classList.contains('show');
+  row.classList.toggle('show',!showing);
+  if(!showing) document.getElementById('dpp-input').value=getDpp();
+}
+function renderDpp(){
+  const dpp=getDpp();
+  const dppDate=new Date(dpp+'T12:00:00');
+  const today=new Date();
+  today.setHours(12,0,0,0);
+  const diffMs=dppDate-today;
+  const diasRestantes=Math.max(0,Math.round(diffMs/(1000*60*60*24)));
+  const diasDecorridos=DPP_TOTAL_DAYS-diasRestantes;
+  const semanas=Math.floor(diasDecorridos/7);
+  const meses=(diasRestantes/30.44).toFixed(1);
+  const pct=Math.min(100,Math.max(0,Math.round(diasDecorridos/DPP_TOTAL_DAYS*100)));
+  document.getElementById('dpp-sem').textContent=semanas>0?semanas+'sem':'—';
+  document.getElementById('dpp-dias').textContent=diasRestantes;
+  document.getElementById('dpp-mes').textContent=meses+'m';
+  document.getElementById('dpp-bar').style.width=pct+'%';
+  document.getElementById('dpp-pct').textContent=pct+'%';
+}
+renderDpp();
+
+
+// =================== PESO ===================
+let PW = JSON.parse(localStorage.getItem('gestante_peso') || '[]');
+let pwC = null, pfC = null, peditPeso = null, pdelPeso = null;
+
+function savePeso(){
+  const p = parseFloat(document.getElementById('wpeso').value);
+  const s = parseInt(document.getElementById('wsem').value);
+  const n = document.getElementById('wnote').value.trim();
+  if(!p || p < 30 || p > 200){ alert('Peso inválido.'); return; }
+  PW.unshift({ts: Date.now(), p, s: s||null, n});
+  localStorage.setItem('gestante_peso', JSON.stringify(PW));
+  ['wpeso','wsem','wnote'].forEach(id => document.getElementById(id).value = '');
+  renderPeso();
+}
+
+function colPeso(v, mn, mx){
+  const pct = mx > mn ? (v - mn)/(mx - mn) : 0.5;
+  if(pct < 0.33) return '#1D9E75';
+  if(pct < 0.66) return '#EF9F27';
+  return '#E24B4A';
+}
+
+function mkPesoGrad(cv, vals){
+  const mn = Math.min(...vals), mx = Math.max(...vals);
+  const ctx = cv.getContext('2d');
+  const g = ctx.createLinearGradient(0, 0, cv.width, 0);
+  if(vals.length === 1){ g.addColorStop(0, '#1D9E75'); return g; }
+  vals.forEach((v,i) => g.addColorStop(i/(vals.length-1), colPeso(v, mn, mx)));
+  return g;
+}
+
+function renderPesoChart(cv, sorted, existingChart, xlblId){
+  cv.width = cv.parentElement.clientWidth || 320;
+  cv.height = parseInt(cv.parentElement.style.height) || 100;
+  if(existingChart){ existingChart.destroy(); }
+  const vals = sorted.map(r => r.p);
+  const mn = Math.min(...vals), mx = Math.max(...vals);
+  const grad = mkPesoGrad(cv, vals);
+  const chart = new Chart(cv, {
+    type: 'line',
+    data: {
+      labels: sorted.map(r => fmt(r.ts)),
+      datasets:[{
+        data: vals,
+        borderColor: grad,
+        backgroundColor: 'rgba(255,255,255,0.04)',
+        tension: .4,
+        pointRadius: 3,
+        pointHoverRadius: 6,
+        pointBackgroundColor: vals.map(v => colPeso(v, mn, mx)),
+        pointBorderColor: 'transparent',
+        borderWidth: 2,
+        fill: true
+      }]
+    },
+    options:{
+      responsive: false, animation: false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'rgba(0,0,0,.85)',titleColor:'#aaa',bodyColor:'#fff',padding:8,displayColors:false,
+          callbacks:{
+            title: ctx => { const r=sorted[ctx[0].dataIndex]; return fmt(r.ts)+(r.s?' · sem '+r.s:''); },
+            label: ctx => ctx.parsed.y + ' kg'
+          }
+        }
+      },
+      scales:{
+        x:{display:false},
+        y:{display:true,position:'left',grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'#666',font:{size:9},maxTicksLimit:4},border:{display:false},suggestedMin:mn-2,suggestedMax:mx+2}
+      }
+    }
+  });
+  const step = Math.max(1, Math.floor(sorted.length/5));
+  document.getElementById(xlblId).innerHTML = sorted
+    .filter((_,i) => i%step===0 || i===sorted.length-1)
+    .map(r => `<span>${new Date(r.ts).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}${r.s?' s'+r.s:''}</span>`).join('');
+  return chart;
+}
+
+function renderPeso(){
+  const has = PW.length > 0;
+  document.getElementById('peso-main').style.display = has ? '' : 'none';
+  document.getElementById('peso-empty').style.display = has ? 'none' : '';
+  if(!has) return;
+
+  const sorted = [...PW].sort((a,b) => a.ts - b.ts);
+  const vals = sorted.map(r => r.p);
+  const mn = Math.min(...vals), mx = Math.max(...vals), av = (vals.reduce((a,v)=>a+v,0)/vals.length).toFixed(1);
+  const ganho = (mx - mn).toFixed(1);
+
+  document.getElementById('pw-last').textContent = PW[0].p + ' kg';
+  document.getElementById('pw-ganho').textContent = (ganho > 0 ? '+' : '') + ganho;
+  document.getElementById('pw-min').textContent = mn;
+  document.getElementById('pw-avg').textContent = av;
+  document.getElementById('pw-max').textContent = mx;
+
+  pwC = renderPesoChart(document.getElementById('pc'), sorted, pwC, 'pxl');
+  renderPesoFiltro();
+  renderPesoHist();
+}
+
+function renderPesoFiltro(){
+  const from = document.getElementById('pf-from').value;
+  const to = document.getElementById('pf-to').value;
+  let F = [...PW].sort((a,b) => a.ts - b.ts);
+  if(from) F = F.filter(r => ds(r.ts) >= from);
+  if(to)   F = F.filter(r => ds(r.ts) <= to);
+
+  const cv = document.getElementById('pfc');
+  if(pfC){ pfC.destroy(); pfC = null; }
+
+  if(!F.length){
+    document.getElementById('pfxl').innerHTML = '';
+    ['pf-min','pf-avg','pf-max'].forEach(id => document.getElementById(id).textContent = '—');
+    cv.getContext('2d').clearRect(0,0,cv.width,cv.height);
+    return;
+  }
+  const vals = F.map(r => r.p);
+  const mn = Math.min(...vals), mx = Math.max(...vals), av = (vals.reduce((a,v)=>a+v,0)/vals.length).toFixed(1);
+  document.getElementById('pf-min').textContent = mn;
+  document.getElementById('pf-avg').textContent = av;
+  document.getElementById('pf-max').textContent = mx;
+  pfC = renderPesoChart(cv, F, null, 'pfxl');
+}
+
+function clrPesoFiltro(){
+  document.getElementById('pf-from').value = '';
+  document.getElementById('pf-to').value = '';
+  renderPesoFiltro();
+}
+
+function renderPesoHist(){
+  let h = '';
+  if(pdelPeso !== null){
+    h += `<div class="cnfbar" style="margin:0 16px 10px"><span style="flex:1">Excluir este registro?</span><button class="cy" onclick="doPesoDel()">Sim</button><button class="cn" onclick="cnlPesoDel()" style="margin-left:6px">Não</button></div>`;
+  }
+  PW.forEach((r,i) => {
+    const p = per(r.ts);
+    if(peditPeso === i){
+      h += `<div class="hi-edit" id="ep_${i}" style="margin:0 16px 7px">
+        <div class="emeta">${fmt(r.ts)} · ${p.e} ${p.l}</div>
+        <div class="egrid" style="grid-template-columns:1fr 1fr">
+          <div><label style="font-size:10px;color:#6e6e73;display:block;margin-bottom:3px">Peso (kg)</label><input id="ep_${i}_p" type="number" inputmode="decimal" step="0.1" value="${r.p}"></div>
+          <div><label style="font-size:10px;color:#6e6e73;display:block;margin-bottom:3px">Semana</label><input id="ep_${i}_s" type="number" inputmode="numeric" value="${r.s||''}"></div>
+        </div>
+        <input class="enote" id="ep_${i}_n" type="text" placeholder="Observação..." value="${r.n||''}">
+        <div class="erow">
+          <button class="esave" onclick="doEditPeso(${i})">✓ Salvar</button>
+          <button class="ecancel" onclick="cnlEditPeso()">Cancelar</button>
+          <button class="delbtn" style="margin-left:4px;font-size:22px" onclick="cnfPesoDel(${i})" aria-label="Excluir">🗑</button>
+        </div>
+        ${pdelPeso===i?`<div class="cnfbar" style="margin:8px 0 0"><span style="flex:1">Confirmar exclusão?</span><button class="cy" onclick="doPesoDel()">Sim</button><button class="cn" onclick="cnlPesoDel()" style="margin-left:6px">Não</button></div>`:''}
+      </div>`;
+    } else {
+      h += `<div class="hi" onclick="startEditPeso(${i})" style="cursor:pointer;margin:0 16px 7px">
+        <div>
+          <div class="hdate">${fmt(r.ts)}${r.s?' · semana '+r.s:''}</div>
+          <div class="hvals">${r.p} kg</div>
+          ${r.n?`<div class="hnote">${r.n}</div>`:''}
+        </div>
+        <div class="hrgt">
+          <div style="display:flex;gap:4px;align-items:center"><span class="pbadge ${p.c}">${p.e} ${p.l}</span><span style="font-size:12px;color:#aeaeb2">✏️</span></div>
+        </div>
+      </div>`;
+    }
+  });
+  document.getElementById('peso-hist').innerHTML = h || '<div class="nodata">Nenhum registro</div>';
+}
+
+function cnfPesoDel(i){ pdelPeso=i; renderPesoHist(); }
+function doPesoDel(){ if(pdelPeso!==null){ PW.splice(pdelPeso,1); localStorage.setItem('gestante_peso',JSON.stringify(PW)); pdelPeso=null; peditPeso=null; renderPeso(); } }
+function cnlPesoDel(){ pdelPeso=null; renderPesoHist(); }
+function startEditPeso(i){ peditPeso=i; pdelPeso=null; renderPesoHist(); setTimeout(()=>{const el=document.getElementById('ep_'+i);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50); }
+function cnlEditPeso(){ peditPeso=null; renderPesoHist(); }
+function doEditPeso(i){
+  const p = parseFloat(document.getElementById('ep_'+i+'_p').value);
+  const s = parseInt(document.getElementById('ep_'+i+'_s').value);
+  const n = document.getElementById('ep_'+i+'_n').value.trim();
+  if(!p||p<30||p>200){ alert('Peso inválido.'); return; }
+  PW[i] = {...PW[i], p, s: s||null, n};
+  localStorage.setItem('gestante_peso', JSON.stringify(PW));
+  peditPeso=null; renderPeso();
+}
+
+function expPesoTxt(){
+  let t = 'HISTÓRICO DE PESO — GESTAÇÃO DO DAVI\n=====================================\n\n';
+  t += `Gerado em: ${new Date().toLocaleString('pt-BR')}\nRegistros: ${PW.length}\n\n`;
+  PW.forEach(r => {
+    t += `${fmt(r.ts)}${r.s?' [sem '+r.s+']':''} — ${r.p} kg${r.n?' ('+r.n+')':''}\n`;
+  });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([t],{type:'text/plain'}));
+  a.download = 'peso_gestante.txt'; a.click();
+}
+
+// =================== NAVEGAÇÃO ===================
+function goPage(page){
+  document.getElementById('page-pressao').style.display = page==='pressao' ? '' : 'none';
+  document.getElementById('page-peso').style.display = page==='peso' ? '' : 'none';
+  document.getElementById('bn-pressao').classList.toggle('on', page==='pressao');
+  document.getElementById('bn-peso').classList.toggle('on', page==='peso');
+  if(page==='peso') renderPeso();
 }
 
 render();
