@@ -1,0 +1,17 @@
+# Mantém o Supabase (plano gratuito) ativo: projetos sem uso por ~7 dias são pausados.
+name: Supabase keep-alive
+
+on:
+  schedule:
+    - cron: '0 12 */3 * *' # a cada 3 dias
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consulta o banco
+        run: |
+          curl -sf "https://yautwhimakubugjzdmqh.supabase.co/rest/v1/registros?select=id&limit=1" \
+            -H "apikey: sb_publishable_UXA2KrR7gBpJmuXgYdY8ZQ_hKW2DZz6" \
+            -H "Authorization: Bearer sb_publishable_UXA2KrR7gBpJmuXgYdY8ZQ_hKW2DZz6"

@@ -123,6 +123,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dpp-cal-info{font-size:10px;color:#aeaeb2;width:100%}
 /* peso */
 .peso-form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 14px}
+/* sintomas */
+.sx-pills{padding:0 16px 10px}
+.sx-lbl{font-size:11px;color:#6e6e73;padding:0 16px 6px}
+.sx-int{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 14px}
+.sx-int button{height:40px;border-radius:10px;border:0.5px solid rgba(0,0,0,.15);background:#f2f2f7;color:#1c1c1e;font-size:13px;font-weight:600;cursor:pointer}
+.sx-int button.on.i1{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.sx-int button.on.i2{background:#EF9F27;border-color:#EF9F27;color:#fff}
+.sx-int button.on.i3{background:#E24B4A;border-color:#E24B4A;color:#fff}
+.ib1{background:#E1F5EE;color:#0F6E56}.ib2{background:#FAEEDA;color:#854F0B}.ib3{background:#FCE8E8;color:#A32D2D}
+.sx-top{display:flex;flex-wrap:wrap;gap:7px;padding:0 16px 14px}
+.sx-top span{font-size:12px;padding:5px 11px;border-radius:20px;background:#f2f2f7;font-weight:500}
 /* bottom nav */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:0.5px solid rgba(0,0,0,.12);display:flex;z-index:100;max-width:430px;margin:0 auto}
 .bnav-btn{flex:1;padding:10px 0 14px;font-size:11px;font-weight:500;background:none;border:none;cursor:pointer;color:#aeaeb2;display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -336,6 +347,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 </div><!-- /page-peso -->
 
+<!-- PAGE SINTOMAS -->
+<div id="page-sintomas" style="display:none">
+
+<div class="sec" style="margin-top:16px">
+  <div class="sec-ttl">Registrar sintoma</div>
+  <div class="sx-lbl">O que está sentindo?</div>
+  <div class="pills sx-pills" id="sx-tipos"></div>
+  <div class="nrow" id="sx-outro-row" style="display:none"><input type="text" id="sx-outro" placeholder="Qual sintoma?"></div>
+  <div class="sx-lbl">Intensidade</div>
+  <div class="sx-int">
+    <button class="i1" onclick="setSxInt(1)">Leve</button>
+    <button class="i2" onclick="setSxInt(2)">Moderada</button>
+    <button class="i3" onclick="setSxInt(3)">Forte</button>
+  </div>
+  <div class="nrow"><input type="text" id="sx-note" placeholder="Observação: onde dói, quanto tempo durou..."></div>
+  <button class="bsave" id="btn-save-sx" onclick="saveSx()">+ Registrar sintoma</button>
+</div>
+
+<div id="sx-main" style="display:none">
+  <div class="sec">
+    <div class="sec-ttl">Mais frequentes · últimos 7 dias</div>
+    <div class="sx-top" id="sx-top"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-ttl">Histórico de sintomas</div>
+    <div id="sx-hist"></div>
+    <div class="exprow"><button class="bexp" onclick="expSxTxt()">⬇ Exportar sintomas para obstetra (.txt)</button></div>
+  </div>
+</div>
+
+<div id="sx-empty" style="text-align:center;padding:40px 20px;color:#6e6e73;font-size:14px">
+  <div style="font-size:40px;margin-bottom:10px">🩺</div>
+  Nenhum sintoma registrado ainda.<br>Adicione o primeiro acima.
+</div>
+
+</div><!-- /page-sintomas -->
+
 <!-- BOTTOM NAV -->
 <div class="bnav">
   <button class="bnav-btn on" id="bn-pressao" onclick="goPage('pressao')">
@@ -343,6 +391,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </button>
   <button class="bnav-btn" id="bn-peso" onclick="goPage('peso')">
     <span class="bnav-icon">⚖️</span><span>Peso</span>
+  </button>
+  <button class="bnav-btn" id="bn-sintomas" onclick="goPage('sintomas')">
+    <span class="bnav-icon">🩺</span><span>Sintomas</span>
   </button>
 </div>
 
@@ -383,8 +434,9 @@ function setSyncDot(state){ // 'ok' | 'err' | 'loading'
 // ── ESTADO ───────────────────────────────────────────────────
 let R = []; // registros pressão
 let PW = []; // pesos
+let SX = []; // sintomas
 let wC=null, fC=null, cC=null, pwC=null, pfC=null;
-let mode='b', turno='a', pdel=null, pedit=null, pdelPeso=null, peditPeso=null;
+let mode='b', turno='a', pdel=null, pedit=null, pdelPeso=null, peditPeso=null, pdelSx=null, peditSx=null, sxEditOrig=null;
 
 // ── HELPERS ──────────────────────────────────────────────────
 function per(ts){const h=new Date(ts).getHours();if(h>=5&&h<12)return{l:'manhã',k:'m',c:'pm',e:'🌅'};if(h>=12&&h<18)return{l:'tarde',k:'t',c:'pt',e:'☀️'};return{l:'noite',k:'n',c:'pn',e:'🌙'};}
@@ -662,28 +714,100 @@ function expPesoTxt(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='peso_gestante.txt';a.click();
 }
 
+// ── SINTOMAS ─────────────────────────────────────────────────
+const SXT=['Dor de cabeça','Dor lombar','Dor pélvica','Cólica','Contração','Enjoo','Azia','Inchaço','Tontura','Cansaço','Falta de ar','Sangramento','Outro'];
+const SXI={1:'Leve',2:'Moderada',3:'Forte'};
+let sxTipo=null, sxInt=null;
+function renderSxTipos(){document.getElementById('sx-tipos').innerHTML=SXT.map(t=>`<button class="pill${sxTipo===t?' on':''}" onclick="setSxTipo('${t}')">${t}</button>`).join('');}
+function setSxTipo(t){sxTipo=t;renderSxTipos();document.getElementById('sx-outro-row').style.display=t==='Outro'?'':'none';}
+function setSxInt(i){sxInt=i;document.querySelectorAll('.sx-int button').forEach((b,k)=>b.classList.toggle('on',k+1===i));}
+async function saveSx(){
+  const t=sxTipo==='Outro'?document.getElementById('sx-outro').value.trim():sxTipo;
+  const n=document.getElementById('sx-note').value.trim();
+  if(!t){alert('Escolha o sintoma.');return;}
+  if(!sxInt){alert('Escolha a intensidade.');return;}
+  const btn=document.getElementById('btn-save-sx');
+  btn.disabled=true;setSyncDot('loading');
+  try{
+    const res=await sbInsert('sintomas',{ts:Date.now(),t,i:sxInt,n});
+    if(res&&res[0]){SX.unshift(res[0]);document.getElementById('sx-note').value='';document.getElementById('sx-outro').value='';setSxTipo(null);setSxInt(null);renderSx();}
+    setSyncDot('ok');
+  }catch(e){setSyncDot('err');alert('Erro ao salvar.');}
+  btn.disabled=false;
+}
+function renderSx(){
+  const has=SX.length>0;
+  document.getElementById('sx-main').style.display=has?'':'none';
+  document.getElementById('sx-empty').style.display=has?'none':'';
+  if(!has)return;
+  const lim=Date.now()-7*24*60*60*1000,cnt={};
+  SX.filter(r=>r.ts>=lim).forEach(r=>cnt[r.t]=(cnt[r.t]||0)+1);
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('sx-top').innerHTML=top.length?top.map(([t,c])=>`<span>${t} · ${c}x</span>`).join(''):'<div class="nodata" style="padding:0">Nenhum sintoma nos últimos 7 dias 🤍</div>';
+  renderSxHist();
+}
+function renderSxHist(){
+  let h='';
+  SX.forEach((r,i)=>{
+    const p=per(r.ts);
+    if(peditSx===i){
+      h+=`<div class="hi-edit" id="ex_${i}" style="margin:0 16px 7px"><div class="emeta">${fmt(r.ts)} · ${p.e} ${p.l} · ${r.t}</div><div class="sx-int" style="padding:0 0 8px">${[1,2,3].map(k=>`<button class="i${k}${r.i===k?' on':''}" onclick="SX[${i}].i=${k};renderSxHist()">${SXI[k]}</button>`).join('')}</div><input class="enote" id="ex_${i}_n" type="text" placeholder="Observação..." value="${r.n||''}"><div class="erow"><button class="esave" onclick="doEditSx(${i})">✓ Salvar</button><button class="ecancel" onclick="cnlEditSx()">Cancelar</button><button class="delbtn" style="margin-left:4px;font-size:22px" onclick="cnfSxDel(${i})">🗑</button></div>${pdelSx===i?`<div class="cnfbar" style="margin:8px 0 0"><span style="flex:1">Confirmar exclusão?</span><button class="cy" onclick="doSxDel()">Sim</button><button class="cn" onclick="cnlSxDel()" style="margin-left:6px">Não</button></div>`:''}</div>`;
+    } else {
+      h+=`<div class="hi" onclick="startEditSx(${i})" style="margin:0 16px 7px"><div><div class="hdate">${fmt(r.ts)}</div><div class="hvals">${r.t}</div>${r.n?`<div class="hnote">${r.n}</div>`:''}</div><div class="hrgt"><div style="display:flex;gap:4px;align-items:center"><span class="pbadge ib${r.i}">${SXI[r.i]}</span><span style="font-size:12px;color:#aeaeb2">✏️</span></div></div></div>`;
+    }
+  });
+  document.getElementById('sx-hist').innerHTML=h||'<div class="nodata">Nenhum registro</div>';
+}
+function cnfSxDel(i){pdelSx=i;renderSxHist();}
+async function doSxDel(){
+  if(pdelSx===null)return;
+  setSyncDot('loading');
+  await sbDelete('sintomas',SX[pdelSx].id);
+  SX.splice(pdelSx,1);pdelSx=null;peditSx=null;setSyncDot('ok');renderSx();
+}
+function cnlSxDel(){pdelSx=null;renderSxHist();}
+function startEditSx(i){peditSx=i;pdelSx=null;sxEditOrig={...SX[i]};renderSxHist();setTimeout(()=>{const el=document.getElementById('ex_'+i);if(el)el.scrollIntoView({behavior:'smooth',block:'nearest'});},50);}
+function cnlEditSx(){if(sxEditOrig&&SX[peditSx])SX[peditSx]=sxEditOrig;sxEditOrig=null;peditSx=null;renderSxHist();}
+async function doEditSx(i){
+  const n=document.getElementById('ex_'+i+'_n').value.trim();
+  const it=SX[i].i;
+  setSyncDot('loading');
+  await sbUpdate('sintomas',SX[i].id,{i:it,n});
+  SX[i]={...SX[i],i:it,n};sxEditOrig=null;peditSx=null;setSyncDot('ok');renderSx();
+}
+function expSxTxt(){
+  let t='SINTOMAS — GESTAÇÃO DO DAVI\n===========================\n\n';
+  t+=`Gerado em: ${new Date().toLocaleString('pt-BR')}\nRegistros: ${SX.length}\n\n`;
+  SX.forEach(r=>{const p=per(r.ts);t+=`${fmt(r.ts)} [${p.l}] — ${r.t} (${SXI[r.i]})${r.n?' — '+r.n:''}\n`;});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='sintomas_gestante.txt';a.click();
+}
+
 // ── NAVEGAÇÃO ────────────────────────────────────────────────
 function goPage(page){
-  document.getElementById('page-pressao').style.display=page==='pressao'?'':'none';
-  document.getElementById('page-peso').style.display=page==='peso'?'':'none';
-  document.getElementById('bn-pressao').classList.toggle('on',page==='pressao');
-  document.getElementById('bn-peso').classList.toggle('on',page==='peso');
+  ['pressao','peso','sintomas'].forEach(pg=>{
+    document.getElementById('page-'+pg).style.display=page===pg?'':'none';
+    document.getElementById('bn-'+pg).classList.toggle('on',page===pg);
+  });
   if(page==='peso') renderPeso();
+  if(page==='sintomas') renderSx();
 }
 
 // ── POLLING — atualiza a cada 30s ────────────────────────────
 async function fetchAll(){
   setSyncDot('loading');
   try{
-    const [regs, pesos] = await Promise.all([
+    const [regs, pesos, sints] = await Promise.all([
       sbGet('registros'),
-      sbGet('pesos')
+      sbGet('pesos'),
+      sbGet('sintomas').catch(()=>[])
     ]);
     R = regs;
     PW = pesos;
+    if(Array.isArray(sints) && peditSx===null) SX = sints;
     setSyncDot('ok');
     render();
     if(document.getElementById('page-peso').style.display!=='none') renderPeso();
+    if(document.getElementById('page-sintomas').style.display!=='none') renderSx();
 
     // config (dpp, calibração)
     const [dppVal, calVal] = await Promise.all([sbGetConfig('dpp'), sbGetConfig('dpp_cal')]);
@@ -696,6 +820,7 @@ async function fetchAll(){
 }
 
 // ── INIT ─────────────────────────────────────────────────────
+renderSxTipos();
 fetchAll();
 setInterval(fetchAll, 30000); // atualiza a cada 30 segundos
 </script>
